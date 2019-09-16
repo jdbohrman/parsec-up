@@ -13,7 +13,6 @@ This project was inspired by my personal appreciation for cloud gaming and Terra
 ![](parsec.png)
 
 ## Tech/framework used
-Ex. -
 
 <b>Built with</b>
 - [Terraform](https://terraform.io)
