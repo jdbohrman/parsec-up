@@ -17,6 +17,41 @@ data "aws_subnet_ids” “selected" {
     }
 }
 
+data "aws_security_group" "selected" {
+    tags = {
+    Name = "${var.name_tag}*"
+    }
+}
+
+data "template_file” “user_data" {
+    template = "/scripts/user_data.ps1"
+}
+
+module "ssh_key_pair" {
+    source = "git::https://github.com/cloudposse/terraform-aws-key-pair.git?ref=master"
+    namespace = "example"
+    stage = "dev"
+    name = "${var.key_name}"
+    ssh_public_key_path = "${path.module}/secret"
+    generate_ssh_key = "true"
+    private_key_extension = ".pem"
+    public_key_extension = ".pub"
+}
+
+# — — Copy ssh keys to S3 Bucket
+provisioner "local-exec" {
+    command = "aws s3 cp ${path.module}/secret s3://PATHTOKEYPAIR/ — recursive"
+}
+# — — Deletes keys on destroy
+provisioner "local-exec" {
+    when = "destroy"
+    command = "aws s3 rm 3://PATHTOKEYPAIR/${module.ssh_key_pair.key_name}.pem"
+}
+provisioner "local-exec" {
+when = "destroy"
+command = "aws s3 rm s3://PATHTOKEYPAIR/${module.ssh_key_pair.key_name}.pub"
+}
+
 resource "aws_security_group" "allow-all" {
     name="allow-all"
     egress {
@@ -37,12 +72,15 @@ resource "aws_security_group" "allow-all" {
 }
 
 resource "aws_instance" "this" {
-    ami = "${lookup(var.WIN_AMIS, var.AWS_REGION)}"
-    instance_type = "G2.2xLarge"
+    ami = "({var.ami, var.AWS_REGION)}"
+    instance_type = "G3.4xLarge"
 }
 
-# -- Figure out how to run https://github.com/jamesstringerparsec/Parsec-Cloud-Preparation-Tool
-  provisioner "remote-exec" {
-    command = "",
-    interpreter = ["PowerShell"]
+resource "aws_ebs_volume" "example" {
+  availability_zone = "us-east-1a"
+  size              = 100
+
+  tags = {
+    Name = "parsec.$(id)"
   }
+}
