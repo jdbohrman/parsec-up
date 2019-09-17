@@ -1,45 +1,37 @@
 variable "AWS_ACCESS_KEY" {}
 variable "AWS_SECRET_KEY" {}
-variable "aws_region" {
+
+variable "AWS_REGION" {
     type        = string
     default     = "us-east-2"
     description = "AWS region in which to provision the AWS resources"
 }
 
-variable "associate_public_ip_address" {
-  description = "If true, the EC2 instance will have associated public IP address"
-  type        = bool
-  default     = false
+variable "key_name" {
+    type        = string
+    default     = "parsec"
 }
 
-
-variable "region" {
-    description = "Region for resources"
-    type        = string
-    default     = "us-east-1"
+variable "associate_public_ip_address" {  
+    type        = bool
+    description = "If true, the EC2 instance will have associated public IP address"
+    default     = false
 }
 
 variable "ami" {
-  type        = string
-  description = "The AMI to use for the instance"
-  default     = "ami-0013cc8e269db9d05"
+    type        = string
+    description = "The AMI to use for the instance"
+    default     = "ami-0013cc8e269db9d05"
 }
 
-variable "ami_owner" {
-  type        = string
-  description = "Owner of the given AMI"
+variable "volume_size" {
+    type        = string
+    description = "Size of the EBS root volume"
+    default     = "100"
 }
 
-variable "PATH_TO_PRIVATE_KEY" {
-    default = "mykey"
+variable "volume_type" {
+    type        = string
+    description = "type of EBS volume"
+    default     = "standard"  
 }
-
-variable "PATH_TO_PUBLIC_KEY" {
-    default = "mykey.pub"
-}
-
-variable "INSTANCE_USERNAME" {
-    default = "admin"
-}
-
-variable "INSTANCE_PASSWORD" {}
