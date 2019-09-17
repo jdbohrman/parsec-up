@@ -13,9 +13,11 @@ This project was inspired by my personal appreciation for cloud gaming and Terra
 
 <b>Built with</b>
 - [Terraform](https://terraform.io)
+  [Parsec Cloud Gaming](https://parsecgaming.com/)
 
 ## Features
 
+This Terraform module will allow you to quickly get a cloud gaming rig up and running for yourself or a group of friends. It's will provision a Parsec AMI powered g3.4x Tesla GPU gaming rig for your entertainment. Feel free to edit these setting as much as you like to fit your needs.
 
 ## Installation
 
