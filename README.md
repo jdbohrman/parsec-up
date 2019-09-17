@@ -28,8 +28,7 @@ To use this project, you'll need at least a fundamental understanding of Terrafo
 
 ## Contribute
 
-
-#### Anything else that seems useful
+See the Contribution Guidlines [here](https://github.com/jdbohrman/parsec-up/blob/master/CONTRIBUTING.md)
 
 ## License
 
