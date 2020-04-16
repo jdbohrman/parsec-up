@@ -91,38 +91,23 @@ module "ssh_security_group" {
 
 # -- AMI -- #
 resource "aws_instance" "this" {
-    ami                  = "({var.ami, var.AWS_REGION)}"
-    instance_type        = "G3.4xLarge"
-    key_name             = "${module.ssh_key_pair.key_name}"
-    subnet_id            = ["${module.subnets.private_subnet_ids}", "${module.subnets.public_subnet_ids}"]
-    security_groups      = ["${module.rdp_security_group}", "${module.ssh_security_group}", "${module.http_80_security_group}"] 
-    user_data            = "${data.template_file.user_data.rendered}"
-    iam_instance_profile = "${data.template_file.iam-profile}"
-    get_password_data    = "true"
+    availability_zone       = var.aws_az
+    ami                     = var.ami
+    instance_type           = var.aws_instance_type
+    key_name                = module.ssh_key_pair.key_name
+    subnet_id               = element(module.subnets.public_subnet_ids,0)
+    vpc_security_group_ids  = [module.rdp_security_group.this_security_group_id, module.ssh_security_group.this_security_group_id]
+    user_data               = data.template_file.user_data.rendered
+    iam_instance_profile    = aws_iam_instance_profile.parsec_profile.name
+    get_password_data       = "true"
 
     root_block_device {
-    volume_type           = "${var.volume_type}"
-    volume_size           = "${var.volume_size}"
+    volume_type           = var.volume_type
+    volume_size           = var.volume_size
     delete_on_termination = "true"
   }
     tags = {
     "Name"    = "parsec"
     "Role"    = "Dev"
-  }
-
-  #--- Copy ssh keys to S3 Bucket
-  provisioner "local-exec" {
-    command = "aws s3 cp ${path.module}/secret s3://PATHTOKEYPAIR/ --recursive"
-  }
-
-  #--- Deletes keys on destroy
-  provisioner "local-exec" {
-    when    = "destroy"
-    command = "aws s3 rm 3://PATHTOKEYPAIR/${module.ssh_key_pair.key_name}.pem"
-  }
-
-  provisioner "local-exec" {
-    when    = "destroy"
-    command = "aws s3 rm s3://PATHTOKEYPAIR/${module.ssh_key_pair.key_name}.pub"
   }
 }
