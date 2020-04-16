@@ -82,17 +82,9 @@ module "rdp_security_group" {
 
 module "ssh_security_group" {
     source  = "terraform-aws-modules/security-group/aws//modules/ssh"
-    version = "~> 3.0" 
-    description = "Allow SSH access to EC2 instance"
-    vpc_id  = "${module.vpc.vpc_id}"
-    name    = "parsec-sg"
-}
-
-module "http_80_security_group" {
-    source  = "terraform-aws-modules/security-group/aws//modules/http-80"
     version = "~> 3.0"
-    description = "Allow HTTP access to EC2 instance"
-    vpc_id  = "${module.vpc.vpc_id}"
+    description = "Allow SSH access to EC2 instance"
+    vpc_id  = module.vpc.vpc_id
     name    = "parsec-sg"
     ingress_cidr_blocks = ["10.0.0.0/16"]
 }
