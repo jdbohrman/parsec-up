@@ -1,10 +1,22 @@
 variable "AWS_ACCESS_KEY" {}
 variable "AWS_SECRET_KEY" {}
 
-variable "AWS_REGION" {
+variable "aws_region" {
     type        = string
     default     = "us-east-2"
     description = "AWS region in which to provision the AWS resources"
+}
+
+variable "aws_az" {
+    type        = string
+    default     = "us-east-2a"
+    description = "AWS AZ in which to provision the AWS resources"
+}
+
+variable "aws_instance_type" {
+    type        = string
+    default     = "g4dn.xlarge"
+    description = "Valid inputs: g2.2xlarge, g3.4xlarge, g4dn.xlarge"
 }
 
 variable "key_name" {
@@ -12,7 +24,7 @@ variable "key_name" {
     default     = "parsec"
 }
 
-variable "associate_public_ip_address" {  
+variable "associate_public_ip_address" {
     type        = bool
     description = "If true, the EC2 instance will have associated public IP address"
     default     = false
@@ -33,5 +45,5 @@ variable "volume_size" {
 variable "volume_type" {
     type        = string
     description = "type of EBS volume"
-    default     = "standard"  
+    default     = "gp2"
 }
