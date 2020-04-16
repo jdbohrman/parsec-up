@@ -63,10 +63,11 @@ module "subnets" {
   namespace           = "eg"
   stage               = "prod"
   name                = "app"
-  vpc_id              = "${module.vpc.vpc_id}"
-  igw_id              = "igw-XXXXXXXX"
+  vpc_id              = module.vpc.vpc_id
+  igw_id              = module.vpc.igw_id
   cidr_block          = "10.0.0.0/16"
-  availability_zones  = ["us-east-1a", "us-east-1b"]
+  nat_gateway_enabled = false
+  availability_zones  = [var.aws_az]
 }
 
 # --Security Groups -- #
